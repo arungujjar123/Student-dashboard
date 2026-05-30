@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import type { MotionProps, Variants } from "framer-motion";
 import type { Course } from "@/lib/types";
 import ActivityTile from "@/components/ActivityTile";
 import CourseCard from "@/components/CourseCard";
@@ -20,32 +21,41 @@ export default function Dashboard({
 }: DashboardProps) {
   const reduceMotion = useReducedMotion();
 
-  const containerVariants = reduceMotion
-    ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
+  const reducedVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1 },
+  } satisfies Variants;
+
+  const containerVariants = (reduceMotion
+    ? reducedVariants
     : {
         hidden: { opacity: 0 },
         show: {
           opacity: 1,
           transition: { staggerChildren: 0.12, delayChildren: 0.1 },
         },
-      };
+      }) satisfies Variants;
 
-  const tileVariants = reduceMotion
-    ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
+  const tileVariants = (reduceMotion
+    ? reducedVariants
     : {
         hidden: { opacity: 0, y: 18 },
         show: {
           opacity: 1,
           y: 0,
-          transition: { type: "spring", stiffness: 260, damping: 24 },
+          transition: {
+            type: "spring" as const,
+            stiffness: 260,
+            damping: 24,
+          },
         },
-      };
+      }) satisfies Variants;
 
-  const hoverMotion = reduceMotion
+  const hoverMotion: MotionProps = reduceMotion
     ? {}
     : {
         whileHover: { scale: 1.02 },
-        transition: { type: "spring", stiffness: 300, damping: 20 },
+        transition: { type: "spring" as const, stiffness: 300, damping: 20 },
       };
 
   const tileBase =
